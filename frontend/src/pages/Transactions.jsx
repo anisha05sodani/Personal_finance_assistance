@@ -38,7 +38,7 @@ export default function Transactions() {
       if (endDate) params.end_date = endDate;
       params.page = page;
       params.limit = limit;
-      const res = await api.get("/transactions", { params: {type: 'expense', limit:100} });
+      const res = await api.get("/transactions", { params });
       setTransactions(res.data.items || res.data); // Support both paginated and non-paginated
       setTotalPages(res.data.total_pages || 1);
     } catch (err) {

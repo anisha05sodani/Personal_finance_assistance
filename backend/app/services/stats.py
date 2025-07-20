@@ -9,15 +9,14 @@ from typing import List, Dict
 class StatsService:
     @staticmethod
     def category_summary(db: Session, user: User) -> List[Dict]:
-        # Sum expenses by category
+        # Sum expenses by category using the category string field
         results = (
-            db.query(Category.name, func.sum(Transaction.amount))
-            .join(Transaction, Transaction.category_id == Category.id)
+            db.query(Transaction.category, func.sum(Transaction.amount))
             .filter(Transaction.user_id == user.id, Transaction.type == 'expense')
-            .group_by(Category.name)
+            .group_by(Transaction.category)
             .all()
         )
-        return [{"category": name, "total": float(total or 0)} for name, total in results]
+        return [{"category": cat, "total": float(total or 0)} for cat, total in results]
 
     @staticmethod
     def expense_timeline(db: Session, user: User) -> List[Dict]:

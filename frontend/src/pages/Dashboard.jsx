@@ -11,6 +11,7 @@ import {
   PointElement,
   LineElement,
   Title,
+  BarElement, // <-- Register BarElement
 } from "chart.js";
 import Navbar from "../components/Navbar";
 
@@ -22,7 +23,8 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  Title
+  Title,
+  BarElement // <-- Register BarElement
 );
 
 export default function Dashboard() {
@@ -202,60 +204,45 @@ export default function Dashboard() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col min-h-screen w-full p-4 md:p-8 m-4 bg-white text-black transition-colors duration-300 items-center justify-center">
+      <div className="flex flex-col w-full md:p-8 m-4 bg-white text-black transition-colors duration-300 items-center justify-center">
         <h1 className="text-2xl font-bold mb-6 text-blue-700 text-center">Dashboard</h1>
-        <div className="flex-1 flex flex-col md:flex-row gap-8 w-full h-full items-center justify-center">
+        <div className="flex flex-col md:flex-row gap-8 w-full ">
           {loading ? (
             <div className="flex-1 flex items-center justify-center text-gray-700">Loading...</div>
           ) : (
             <>
-              <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="bg-white p-6 rounded shadow flex flex-col items-center w-full max-w-xl border border-gray-200">
-                  <h2 className="text-lg font-semibold mb-4 text-blue-700 text-center">Expenses by Category</h2>
-                  <div className="flex-1 flex items-center justify-center w-full">
-                    <Pie data={pieData} />
+              {/* Charts in a single row */}
+              <div className="flex flex-row gap-8 w-full items-stretch justify-center">
+                <div className="flex-1 flex flex-col items-center justify-center">
+                  <div className="bg-white p-6 rounded shadow flex flex-col items-center border border-gray-200" style={{ width: 400, height: 400 }}>
+                    <h2 className="text-lg font-semibold mb-4 text-blue-700 text-center">Expenses by Category</h2>
+                    <div className="flex-1 flex items-center justify-center w-full h-full">
+                      <Pie data={pieData} />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="bg-white p-6 rounded shadow flex flex-col items-center w-full max-w-xl border border-gray-200 mb-8">
-                  <h2 className="text-lg font-semibold mb-4 text-blue-700 text-center">Expenses by Category (Pie)</h2>
-                  <div className="flex-1 flex flex-col items-center justify-center w-full">
-                    {Object.keys(expenseByCategory).length > 0 ? (
-                      <>
-                        <Pie data={expensePieData} />
-                        <div className="flex flex-wrap justify-center gap-4 mt-4">
-                          {Object.keys(expenseByCategory).map((cat, idx) => (
-                            <div key={cat} className="flex items-center gap-2">
-                              <span style={{ backgroundColor: expensePieData.datasets[0].backgroundColor[idx], width: 16, height: 16, display: 'inline-block', borderRadius: 4 }}></span>
-                              <span className="text-sm text-gray-700">{cat}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="text-gray-400 text-center py-8">No expense data to display.</div>
-                    )}
+                <div className="flex-1 flex flex-col items-center justify-center">
+                  <div className="bg-white p-6 rounded shadow flex flex-col items-center border border-gray-200" style={{ width: 400, height: 400 }}>
+                    <h2 className="text-lg font-semibold mb-4 text-blue-700 text-center">Expenses by Category (Bar)</h2>
+                    <div className="flex-1 flex items-center justify-center w-full h-full">
+                      {Object.keys(expenseByCategory).length > 0 ? (
+                        <Bar data={barData} options={barOptions} />
+                      ) : (
+                        <div className="text-gray-400 text-center py-8">No expense data to display.</div>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="bg-white p-6 rounded shadow flex flex-col items-center w-full max-w-xl border border-gray-200 mb-8">
-                  <h2 className="text-lg font-semibold mb-4 text-blue-700 text-center">Expenses by Category (Bar)</h2>
-                  <div className="flex-1 flex items-center justify-center w-full">
-                    {Object.keys(expenseByCategory).length > 0 ? (
-                      <Bar data={barData} options={barOptions} />
-                    ) : (
-                      <div className="text-gray-400 text-center py-8">No expense data to display.</div>
-                    )}
-                  </div>
-                </div>
-                <div className="bg-white p-6 rounded shadow flex flex-col items-center w-full max-w-xl border border-gray-200">
-                  <h2 className="text-lg font-semibold mb-4 text-blue-700 text-center">Expenses Over Time</h2>
-                  <div className="flex-1 flex items-center justify-center w-full">
-                    {lineData.labels.length > 0 ? (
-                      <Line data={lineData} options={lineOptions} />
-                    ) : (
-                      <div className="text-gray-400 text-center py-8">No timeline data to display.</div>
-                    )}
+                <div className="flex-1 flex flex-col items-center justify-center">
+                  <div className="bg-white p-6 rounded shadow flex flex-col items-center border border-gray-200" style={{ width: 400, height: 400 }}>
+                    <h2 className="text-lg font-semibold mb-4 text-blue-700 text-center">Expenses Over Time</h2>
+                    <div className="flex-1 flex items-center justify-center w-full h-full">
+                      {lineData.labels.length > 0 ? (
+                        <Line data={lineData} options={lineOptions} />
+                      ) : (
+                        <div className="text-gray-400 text-center py-8">No timeline data to display.</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

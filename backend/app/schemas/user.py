@@ -9,6 +9,7 @@ class UserCreate(UserBase):
 
 class UserRead(UserBase):
     id: int
+    created_at: Optional[str]  # ISO datetime string
     class Config:
         orm_mode = True
 

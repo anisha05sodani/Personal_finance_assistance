@@ -4,9 +4,10 @@ from .api import auth_router, category_router, transaction_router, upload_router
 
 app = FastAPI()
 
+# Enable CORS for all origins (for development)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Frontend URL
+    allow_origins=["*"],  # Or ["http://localhost:5173"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

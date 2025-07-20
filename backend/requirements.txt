@@ -11,3 +11,4 @@ pdfplumber
 pymupdf
 pytesseract
 pillow 
+invoice2data
