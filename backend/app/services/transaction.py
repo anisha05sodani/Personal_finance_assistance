@@ -8,14 +8,14 @@ from datetime import date
 
 class TransactionService:
     @staticmethod
-    def get_transactions(db: Session, user: User, skip: int = 0, limit: int = 20, start_date: Optional[date] = None, end_date: Optional[date] = None, category_id: Optional[int] = None, type: Optional[str] = None):
+    def get_transactions(db: Session, user: User, skip: int = 0, limit: int = 20, start_date: Optional[date] = None, end_date: Optional[date] = None, category: Optional[str] = None, type: Optional[str] = None):
         query = db.query(Transaction).filter(Transaction.user_id == user.id)
         if start_date:
             query = query.filter(Transaction.date >= start_date)
         if end_date:
             query = query.filter(Transaction.date <= end_date)
-        if category_id:
-            query = query.filter(Transaction.category_id == category_id)
+        if category:
+            query = query.filter(Transaction.category == category)
         if type:
             query = query.filter(Transaction.type == type)
         return query.order_by(Transaction.date.desc()).offset(skip).limit(limit).all()

@@ -36,7 +36,7 @@ export default function Upload() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col min-h-screen w-full p-4 md:p-8 bg-white text-black transition-colors duration-300 items-center justify-center">
+      <div className="flex flex-col min-h-screen w-full p-4 md:p-8 m-4 bg-white text-black transition-colors duration-300 items-center justify-center">
         <h1 className="text-2xl font-bold mb-6 text-blue-700 text-center">Upload Receipt or PDF</h1>
         <div className="flex-1 flex flex-col w-full max-w-xl mx-auto items-center justify-center">
           <input

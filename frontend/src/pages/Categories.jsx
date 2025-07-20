@@ -65,55 +65,60 @@ export default function Categories() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col min-h-screen w-full p-4 md:p-8 bg-white text-black transition-colors duration-300 items-center justify-center">
-        <div className="flex justify-between items-center mb-6 w-full max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold text-blue-700">Categories</h1>
+      <div className="flex bg-white text-black transition-colors justify-center m-4">
+        <div className="flex flex-col items-center">
+          <div>
+            <h1 className="" style={{ marginTop: 0 }}>
+              Categories
+            </h1>
+          </div>
           <button
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
             onClick={handleAdd}
+            style={{ marginBottom: 10 }}
           >
             + Add Category
           </button>
-        </div>
-        <div className="flex-1 flex flex-col w-full max-w-4xl mx-auto items-center justify-center">
-          {loading ? (
-            <div className="flex-1 flex items-center justify-center text-gray-700">Loading...</div>
-          ) : error ? (
-            <div className="text-red-600">{error}</div>
-          ) : (
-            <div className="overflow-x-auto flex-1 w-full">
-              <table className="min-w-full bg-white rounded shadow h-full mx-auto border border-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-gray-700">Name</th>
-                    <th className="px-4 py-2 text-gray-700">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {categories.map((cat) => (
-                    <tr key={cat.id} className="border-t border-gray-200">
-                      <td className="px-4 py-2 text-black">{cat.name}</td>
-                      <td className="px-4 py-2">
-                        <button
-                          className="text-blue-600 hover:underline mr-2"
-                          onClick={() => handleEdit(cat)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="text-red-600 hover:underline"
-                          onClick={() => handleDelete(cat.id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
+          <div className="flex-1 flex flex-col w-full items-center justify-center">
+            {loading ? (
+              <div className="flex-1 flex items-center justify-center text-gray-700">Loading...</div>
+            ) : error ? (
+              <div className="text-red-600">{error}</div>
+            ) : (
+              <div className="overflow-x-auto flex-1 w-full">
+                <table className="min-w-[350px] max-w-xl bg-white rounded shadow h-full mx-auto border border-gray-200 text-center">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 text-gray-700 w-2/3 text-left">Name</th>
+                      <th className="px-4 py-2 text-gray-700 w-1/3 text-center">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-          {/* Modal */}
+                  </thead>
+                  <tbody>
+                    {categories.map((cat) => (
+                      <tr key={cat.id} className="border-t border-gray-200">
+                        <td className="px-4 py-2 text-black text-left align-middle">{cat.name}</td>
+                        <td className="px-4 py-2 align-middle text-center">
+                          <button
+                            className="text-blue-600 hover:underline mr-2"
+                            onClick={() => handleEdit(cat)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="text-red-600 hover:underline"
+                            onClick={() => handleDelete(cat.id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {/* Modal */}
+          </div>
         </div>
       </div>
     </>

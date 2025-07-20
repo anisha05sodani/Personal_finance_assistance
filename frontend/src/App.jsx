@@ -91,51 +91,31 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
-                <Layout>
                   <Dashboard />
-                </Layout>
-              </ProtectedRoute>
             }
           />
           <Route
             path="/transactions"
             element={
-              <ProtectedRoute>
-                <Layout>
                   <Transactions />
-                </Layout>
-              </ProtectedRoute>
             }
           />
           <Route
             path="/categories"
             element={
-              <ProtectedRoute>
-                <Layout>
                   <Categories />
-                </Layout>
-              </ProtectedRoute>
             }
           />
           <Route
             path="/upload"
             element={
-              <ProtectedRoute>
-                <Layout>
                   <Upload />
-                </Layout>
-              </ProtectedRoute>
             }
           />
           <Route
             path="/profile"
             element={
-              <ProtectedRoute>
-                <Layout>
                   <Profile />
-                </Layout>
-              </ProtectedRoute>
             }
           />
         </Routes>

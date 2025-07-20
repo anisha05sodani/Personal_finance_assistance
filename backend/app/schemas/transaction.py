@@ -7,7 +7,7 @@ class TransactionBase(BaseModel):
     type: str  # 'income' or 'expense'
     description: Optional[str] = None
     date: date
-    category_id: Optional[int] = None
+    category: str
 
 class TransactionCreate(TransactionBase):
     pass

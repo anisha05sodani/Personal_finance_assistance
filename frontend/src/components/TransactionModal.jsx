@@ -4,7 +4,7 @@ export default function TransactionModal({ open, onClose, onSave, categories, in
   const [form, setForm] = useState({
     date: "",
     type: "expense",
-    category_id: "",
+    category: "",
     amount: "",
     description: "",
   });
@@ -14,12 +14,12 @@ export default function TransactionModal({ open, onClose, onSave, categories, in
       setForm({
         date: initialData.date || "",
         type: initialData.type || "expense",
-        category_id: initialData.category_id || "",
+        category: initialData.category || "",
         amount: initialData.amount || "",
         description: initialData.description || "",
       });
     } else {
-      setForm({ date: "", type: "expense", category_id: "", amount: "", description: "" });
+      setForm({ date: "", type: "expense", category: "", amount: "", description: "" });
     }
   }, [initialData, open]);
 
@@ -35,10 +35,26 @@ export default function TransactionModal({ open, onClose, onSave, categories, in
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded shadow w-full max-w-md relative">
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.4)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 50,
+      }}
+    >
+      <div
+        className="bg-white p-6 rounded shadow relative"
+        style={{ width: '100%', maxWidth: '400px', minWidth: '280px' }}
+      >
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          style={{ right: 8, top: 8, left: 'auto' }}
           onClick={onClose}
         >
           ×
@@ -72,18 +88,24 @@ export default function TransactionModal({ open, onClose, onSave, categories, in
           <div>
             <label className="block mb-1 font-medium">Category</label>
             <select
-              name="category_id"
+              name="category"
               className="w-full border rounded px-3 py-2"
-              value={form.category_id}
+              value={form.category}
               onChange={handleChange}
               required
             >
               <option value="">Select</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
+              <option value="education">Education</option>
+              <option value="food">Food</option>
+              <option value="rent">Rent</option>
+              <option value="utilities">Utilities</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="shopping">Shopping</option>
+              <option value="health">Health</option>
+              <option value="travel">Travel</option>
+              <option value="salary">Salary</option>
+              <option value="investment">Investment</option>
+              <option value="others">Others</option>
             </select>
           </div>
           <div>

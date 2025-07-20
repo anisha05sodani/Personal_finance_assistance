@@ -33,12 +33,12 @@ export default function Transactions() {
     try {
       const params = {};
       if (type) params.type = type;
-      if (category) params.category_id = category;
+      if (category) params.category = category;
       if (startDate) params.start_date = startDate;
       if (endDate) params.end_date = endDate;
       params.page = page;
       params.limit = limit;
-      const res = await api.get("/transactions", { params });
+      const res = await api.get("/transactions", { params: {type: 'expense', limit:100} });
       setTransactions(res.data.items || res.data); // Support both paginated and non-paginated
       setTotalPages(res.data.total_pages || 1);
     } catch (err) {
@@ -82,13 +82,11 @@ export default function Transactions() {
         await api.put(`/transactions/${editTx.id}`, {
           ...form,
           amount: parseFloat(form.amount),
-          category_id: parseInt(form.category_id),
         });
       } else {
         await api.post("/transactions", {
           ...form,
           amount: parseFloat(form.amount),
-          category_id: parseInt(form.category_id),
         });
       }
       setModalOpen(false);
@@ -101,118 +99,131 @@ export default function Transactions() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col min-h-screen w-full p-4 md:p-8 bg-white text-black transition-colors duration-300 items-center justify-center">
-        <div className="flex justify-between items-center mb-6 w-full max-w-5xl mx-auto">
-          <h1 className="text-2xl font-bold text-blue-700">Transactions</h1>
+      <div className="flex bg-white text-black transition-colors justify-center m-4" >
+        <div className="flex flex-col items-center " >
+          <div><h1
+            className=""
+            style={{ marginTop: 0 }}
+          >
+            Transactions
+          </h1>
+          </div>
           <button
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition "
             onClick={handleAdd}
+            style={{ marginBottom: 10 }}
           >
             + Add Transaction
           </button>
-        </div>
-        {/* Filter controls */}
-        <div className="flex flex-wrap gap-4 mb-4 items-end w-full max-w-5xl mx-auto items-center justify-center">
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Type</label>
-            <select
-              className="border rounded px-2 py-1"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Category</label>
-            <select
-              className="border rounded px-2 py-1"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">All</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">Start Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 text-gray-700">End Date</label>
-            <input
-              type="date"
-              className="border rounded px-2 py-1"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="flex-1 flex flex-col w-full max-w-5xl mx-auto items-center justify-center">
-          {loading ? (
-            <div className="flex-1 flex items-center justify-center text-gray-700">Loading...</div>
-          ) : error ? (
-            <div className="text-red-600">{error}</div>
-          ) : (
-            <div className="overflow-x-auto flex-1 w-full">
-              <table className="min-w-full bg-white rounded shadow h-full mx-auto border border-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-gray-700">Date</th>
-                    <th className="px-4 py-2 text-gray-700">Type</th>
-                    <th className="px-4 py-2 text-gray-700">Category</th>
-                    <th className="px-4 py-2 text-gray-700">Amount</th>
-                    <th className="px-4 py-2 text-gray-700">Description</th>
-                    <th className="px-4 py-2 text-gray-700">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((tx) => (
-                    <tr key={tx.id} className="border-t border-gray-200">
-                      <td className="px-4 py-2 text-black">{tx.date}</td>
-                      <td className="px-4 py-2 text-black">{tx.type}</td>
-                      <td className="px-4 py-2 text-black">{tx.category_name}</td>
-                      <td className="px-4 py-2 text-black">{tx.amount}</td>
-                      <td className="px-4 py-2 text-black">{tx.description}</td>
-                      <td className="px-4 py-2">
-                        <button
-                          className="text-blue-600 hover:underline mr-2"
-                          onClick={() => handleEdit(tx)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="text-red-600 hover:underline"
-                          onClick={() => handleDelete(tx.id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Filter controls */}
+          <div className="flex flex-wrap gap-4 mb-4 items-end w-full max-w-5xl mx-auto items-center justify-center">
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">Type</label>
+              <select
+                className="border rounded px-3 py-2 min-w-[120px]"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
             </div>
-          )}
-          {/* Modal */}
-          <TransactionModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            onSave={handleSave}
-            categories={categories}
-            initialData={editTx}
-          />
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">Category</label>
+              <select
+                className="border rounded px-3 py-2 min-w-[160px]"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="education">Education</option>
+                <option value="food">Food</option>
+                <option value="rent">Rent</option>
+                <option value="utilities">Utilities</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="shopping">Shopping</option>
+                <option value="health">Health</option>
+                <option value="travel">Travel</option>
+                <option value="salary">Salary</option>
+                <option value="investment">Investment</option>
+                <option value="others">Others</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">Start Date</label>
+              <input
+                type="date"
+                className="border rounded px-3 py-2 min-w-[140px]"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">End Date</label>
+              <input
+                type="date"
+                className="border rounded px-3 py-2 min-w-[140px]"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col w-full max-w-5xl mx-auto items-center justify-center">
+            {loading ? (
+              <div className="flex-1 flex items-center justify-center text-gray-700">Loading...</div>
+            ) : error ? (
+              <div className="text-red-600">{error}</div>
+            ) : (
+              <div className="overflow-x-auto flex-1 w-full">
+                <table className="min-w-full bg-white rounded shadow h-full mx-auto border border-gray-400 text-center">
+                  <thead>
+                    <tr className="border-b-2 border-gray-500">
+                      <th className="px-4 py-2 text-gray-700 border-r border-gray-300">Date</th>
+                      <th className="px-4 py-2 text-gray-700 border-r border-gray-300">Type</th>
+                      <th className="px-4 py-2 text-gray-700 border-r border-gray-300">Category</th>
+                      <th className="px-4 py-2 text-gray-700 border-r border-gray-300">Amount</th>
+                      <th className="px-4 py-2 text-gray-700 border-r border-gray-300">Description</th>
+                      <th className="px-4 py-2 text-gray-700">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-400">
+                    {transactions.map((tx, idx) => (
+                      <tr key={tx.id} className={idx !== transactions.length - 1 ? 'border-b border-gray-400' : ''}>
+                        <td className="px-4 py-2 text-black border-r border-gray-200">{tx.date}</td>
+                        <td className="px-4 py-2 text-black border-r border-gray-200">{tx.type}</td>
+                        <td className="px-4 py-2 text-black border-r border-gray-200">{tx.category}</td>
+                        <td className="px-4 py-2 text-black border-r border-gray-200">{tx.amount}</td>
+                        <td className="px-4 py-2 text-black border-r border-gray-200">{tx.description}</td>
+                        <td className="px-4 py-2">
+                          <button
+                            className="text-blue-600 hover:underline mr-2"
+                            onClick={() => handleEdit(tx)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="text-red-600 hover:underline"
+                            onClick={() => handleDelete(tx.id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {/* Modal */}
+            <TransactionModal
+              open={modalOpen}
+              onClose={() => setModalOpen(false)}
+              onSave={handleSave}
+              categories={categories}
+              initialData={editTx}
+            />
+          </div>
         </div>
       </div>
     </>

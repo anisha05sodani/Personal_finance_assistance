@@ -18,10 +18,10 @@ def list_transactions(
     limit: int = Query(20, le=100),
     start_date: Optional[date] = Query(None),
     end_date: Optional[date] = Query(None),
-    category_id: Optional[int] = Query(None),
+    category: Optional[str] = Query(None),
     type: Optional[str] = Query(None)
 ):
-    return TransactionService.get_transactions(db, user, skip, limit, start_date, end_date, category_id, type)
+    return TransactionService.get_transactions(db, user, skip, limit, start_date, end_date, category, type)
 
 @router.post("/", response_model=TransactionRead)
 def create_transaction(
