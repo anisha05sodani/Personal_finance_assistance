@@ -1,5 +1,7 @@
 ﻿# 💰 Personal Finance Assistant
 
+[![Backend CI](https://github.com/<your-username>/<your-repo>/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/<your-username>/<your-repo>/actions/workflows/backend-ci.yml)
+
 A full-stack personal finance management app: track income & expenses, set budgets,
 visualize spending, scan receipts with OCR, and chat with an AI assistant about your
 finances.
@@ -188,6 +190,26 @@ backend/      FastAPI app (API, services, models, schemas)
 frontend/     React + Vite app
 ocr-service/  Optional standalone PaddleOCR microservice
 ```
+
+---
+
+## 🧪 Running the backend tests
+
+The backend ships with a `pytest` suite (auth, transactions, budgets, categories,
+stats, the upload parsers and the AI fallback logic). Tests use a throwaway SQLite
+database and never touch `finance.db`, and they make **no network calls** (the AI
+layer runs its rule-based fallback).
+
+```bash
+cd backend
+pip install -r requirements-dev.txt          # pytest, pytest-cov, httpx + app deps
+pytest                                        # run the suite
+pytest --cov=app --cov-report=term-missing    # with a coverage report
+```
+
+Every push and pull request runs these tests automatically via GitHub Actions
+(see `.github/workflows/backend-ci.yml`). Update the badge URL at the top of this
+file with your GitHub `username/repo` once you push.
 
 ---
 
