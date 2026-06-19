@@ -1,0 +1,82 @@
+# ===========================================================================
+# Root .gitignore for Personal Finance Assistant
+# Excludes everything that should NOT be committed / uploaded to GitHub.
+# ===========================================================================
+
+# --- Secrets / environment ---
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+.installed.cfg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Databases (local SQLite) ---
+*.db
+*.sqlite
+*.sqlite3
+finance.db
+
+# --- Node / frontend ---
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# --- OCR service model caches / weights ---
+ocr-service/**/*.onnx
+ocr-service/**/inference/
+.paddleocr/
+~/.paddleocr/
+
+# --- Logs ---
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# --- Test / coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# --- Build artifacts / archives ---
+*.zip
+*.tar.gz

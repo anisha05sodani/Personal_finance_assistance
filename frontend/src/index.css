@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode (toggled via .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom properties */
+:root {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  color: #1f2937;
+}
+
+.dark body {
+  color: #f3f4f6;
+}
+
+/* Emoji styling */
+.emoji {
+  font-family: var(--font-emoji);
+  font-style: normal;
+  line-height: 1;
+}
+
+.emoji-sm { font-size: 1rem; }
+.emoji-md { font-size: 1.25rem; }
+.emoji-lg { font-size: 1.5rem; }
+.emoji-xl { font-size: 2rem; }
+
+/* Icon container utilities */
+.icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-xs { width: 1.5rem; height: 1.5rem; }
+.icon-sm { width: 2rem; height: 2rem; }
+.icon-md { width: 2.5rem; height: 2.5rem; }
+.icon-lg { width: 3rem; height: 3rem; }
+.icon-xl { width: 4rem; height: 4rem; }
+
+/* SVG icon sizing */
+.icon-container svg {
+  width: 50%;
+  height: 50%;
+}
+
+/* Better button defaults */
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Input improvements */
+input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+}
+
+/* Consistent border radius */
+.rounded-btn { border-radius: 0.75rem; }
+.rounded-card { border-radius: 1rem; }
+.rounded-modal { border-radius: 1.5rem; }
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+/* Stagger children animations */
+.stagger-children > * {
+  animation: fadeIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+
+/* Skeleton loading animation */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background-color: rgba(59, 130, 246, 0.3);
+  color: inherit;
+}
+
+/* Glass effect utility */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark .glass {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+.dark .card-hover:hover {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.4);
+}
+
+/* Button ripple effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  transform: scale(0);
+  transition: transform 0.5s ease;
+}
+
+.btn-ripple:active::after {
+  transform: scale(2);
+  transition: transform 0s;
+}
+
+/* Hide number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
