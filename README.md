@@ -96,18 +96,33 @@ API docs are at **http://localhost:8000/docs**.
      add the install folder to your `PATH` (or set `TESSERACT_CMD` in `.env`).
    - **macOS:** `brew install tesseract`
    - **Linux:** `sudo apt install tesseract-ocr`
-5. **Run the server:**
+5. **Run the server** (from the `backend/` folder):
    ```bash
-   uvicorn app.main:app --reload --port 8000
+   uvicorn app.main:app --reload --port 8001
    ```
    The SQLite database (`finance.db`) and tables are created automatically on first run.
+
+   **Launching from the project root instead?** The `app` package lives in
+   `backend/`, so add `--app-dir backend`:
+   ```bash
+   # run from the repository root
+   uvicorn app.main:app --reload --app-dir backend --port 8001
+   ```
+
+   > ⚠️ **SQLite path gotcha:** the default `DATABASE_URL=sqlite:///./finance.db`
+   > uses a path relative to the folder you launch from, so starting the server
+   > from `backend/` vs. the repo root would create **different** database files.
+   > To always use one database, set an **absolute** path in `backend/.env`, e.g.
+   > `DATABASE_URL=sqlite:///C:/full/path/to/finance.db`. The built-in default
+   > already resolves to an absolute `backend/finance.db` when `DATABASE_URL` is
+   > left unset.
 
 ### Backend environment variables (`backend/.env`)
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
 | `ENVIRONMENT` | `development` | Set to `production` to enable strict security checks |
-| `DATABASE_URL` | `sqlite:///./finance.db` | Use a PostgreSQL URL for production |
+| `DATABASE_URL` | absolute `backend/finance.db` | Prefer an absolute path (or a PostgreSQL URL for production) — see the SQLite path gotcha above |
 | `SECRET_KEY` | _(change it!)_ | JWT signing key — **must** be changed for production |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` | Token lifetime |
 | `FRONTEND_URL` / `CORS_ORIGINS` | localhost:5173 | Allowed CORS origins |
@@ -213,7 +228,38 @@ file with your GitHub `username/repo` once you push.
 
 ---
 
-## 📦 Capturing dependencies
+## �️ Troubleshooting
+
+**`[WinError 10013] ... socket ... forbidden` or `address already in use` on startup**
+Port `8000` is already taken by another program. Run the backend on a different
+port and point the frontend at it:
+
+```bash
+# backend (terminal 1)
+uvicorn app.main:app --reload --port 8001
+
+# frontend (terminal 2) — create frontend/.env.local with:
+#   VITE_API_URL=http://localhost:8001
+npm run dev
+```
+
+The frontend defaults to `http://localhost:8000`; setting `VITE_API_URL` in a
+`frontend/.env` or `frontend/.env.local` file overrides it. Restart `npm run dev`
+after changing it. (CORS already allows the frontend on `localhost:5173`, so only
+the API port needs to match.)
+
+**`ModuleNotFoundError: No module named 'pydantic_settings'`**
+Your virtualenv is missing a dependency — install (or reinstall) the requirements
+from the `backend/` folder: `pip install -r requirements.txt`.
+
+**Registration/login fails with a connection error**
+The backend isn't running, or the frontend is pointing at the wrong port. Confirm
+the API is up (open `http://localhost:8000/docs`, or `:8001`) and that
+`VITE_API_URL` matches the port the backend is actually using.
+
+---
+
+## �📦 Capturing dependencies
 
 The repo already ships curated dependency files:
 - `backend/requirements.txt`

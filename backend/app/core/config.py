@@ -2,17 +2,24 @@ from pydantic_settings import BaseSettings
 from pathlib import Path
 import os
 
-# Absolute path to backend/.env so the file is loaded regardless of the current
-# working directory (e.g. when running uvicorn from the project root with
-# --app-dir backend). config.py lives at backend/app/core/, so parents[2] == backend.
-_ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
+# Absolute path to the backend/ directory. config.py lives at
+# backend/app/core/, so parents[2] == backend. Used to anchor both the .env file
+# and the default SQLite database so they resolve to the same location no matter
+# which working directory the process is launched from.
+_BACKEND_DIR = Path(__file__).resolve().parents[2]
+_ENV_FILE = _BACKEND_DIR / ".env"
+# Default SQLite file pinned to backend/finance.db via an absolute path. Using a
+# relative path like "sqlite:///./finance.db" would create a *new* empty database
+# in whatever folder uvicorn was started from, so running from the repo root vs.
+# backend/ would silently use different files.
+_DEFAULT_SQLITE_URL = f"sqlite:///{(_BACKEND_DIR / 'finance.db').as_posix()}"
 
 class Settings(BaseSettings):
     # Deployment environment: "development" or "production". In production the
     # app refuses to start with insecure defaults (see the guard below).
     ENVIRONMENT: str = "development"
     # Use SQLite by default for easy development, or PostgreSQL if DATABASE_URL is set
-    DATABASE_URL: str = "sqlite:///./finance.db"
+    DATABASE_URL: str = _DEFAULT_SQLITE_URL
     SECRET_KEY: str = "change-this-secret-key-in-production"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 1 day

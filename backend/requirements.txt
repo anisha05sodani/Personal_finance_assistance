@@ -6,6 +6,7 @@ alembic
 python-jose
 passlib[bcrypt]
 pydantic
+pydantic-settings
 python-multipart
 pdfplumber
 pymupdf
