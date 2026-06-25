@@ -1,19 +1,73 @@
 import React, { useEffect, useRef, useState } from "react";
 import api from "../services/api";
 
-// Minimal, XSS-safe markdown rendering: escape HTML first, then apply a few
-// inline styles (bold, italic, inline code) and preserve line breaks.
+// Minimal, XSS-safe markdown rendering: escape HTML first, then build block
+// elements (headings, bullet/numbered lists, paragraphs) and apply a few inline
+// styles (bold, italic, inline code). No raw user/LLM HTML is ever injected.
+function renderInline(s) {
+  return s
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+?)`/g, '<code class="px-1 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-xs">$1</code>')
+    .replace(/(^|[^*])\*(?!\*)([^*]+?)\*(?!\*)/g, "$1<em>$2</em>");
+}
+
 function renderMarkdown(text) {
   const escaped = String(text)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-  const formatted = escaped
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/`(.+?)`/g, '<code class="px-1 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-xs">$1</code>')
-    .replace(/(^|[^*])\*(?!\*)([^*]+?)\*(?!\*)/g, "$1<em>$2</em>")
-    .replace(/\n/g, "<br/>");
-  return { __html: formatted };
+
+  const lines = escaped.split(/\r?\n/);
+  let html = "";
+  let listType = null; // "ul" | "ol"
+  const closeList = () => {
+    if (listType) {
+      html += `</${listType}>`;
+      listType = null;
+    }
+  };
+
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) {
+      closeList();
+      continue;
+    }
+
+    const heading = line.match(/^(#{1,6})\s+(.*)$/);
+    if (heading) {
+      closeList();
+      html += `<p class="font-semibold mt-1 first:mt-0 mb-0.5">${renderInline(heading[2])}</p>`;
+      continue;
+    }
+
+    const bullet = line.match(/^[-*•]\s+(.*)$/);
+    if (bullet) {
+      if (listType !== "ul") {
+        closeList();
+        html += '<ul class="list-disc ml-4 my-1 space-y-0.5">';
+        listType = "ul";
+      }
+      html += `<li>${renderInline(bullet[1])}</li>`;
+      continue;
+    }
+
+    const ordered = line.match(/^\d+[.)]\s+(.*)$/);
+    if (ordered) {
+      if (listType !== "ol") {
+        closeList();
+        html += '<ol class="list-decimal ml-4 my-1 space-y-0.5">';
+        listType = "ol";
+      }
+      html += `<li>${renderInline(ordered[1])}</li>`;
+      continue;
+    }
+
+    closeList();
+    html += `<p class="mb-1 last:mb-0">${renderInline(line)}</p>`;
+  }
+  closeList();
+  return { __html: html };
 }
 
 export default function AIChat() {
